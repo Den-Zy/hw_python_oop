@@ -1,3 +1,26 @@
+from typing import Optional
+
+class Record:
+    def __init__(self, amount: int, comment: str, date: Optional[str] = None):
+        self.amount = amount
+        self.comment = comment
+        self.date = date
+
+
+class Calculator:
+    def __init__(self, limit):
+        self.records = []
+        self.limit = limit
+
+
+class CaloriesCalculator(Calculator):
+    ...
+
+
+class CashCalculator(Calculator):
+    ...
+
+
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     pass
