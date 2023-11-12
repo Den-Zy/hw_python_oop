@@ -1,16 +1,43 @@
-from typing import Optional
+import datetime as dt
+from typing import Optional, Union
+
+date_format = '%d.%m.%Y'
+
 
 class Record:
     def __init__(self, amount: int, comment: str, date: Optional[str] = None):
         self.amount = amount
         self.comment = comment
-        self.date = date
+        if date is None:
+            self.date = dt.datetime.now().date()
+        else:
+            self.date = dt.datetime.strptime(date, date_format)
 
 
 class Calculator:
-    def __init__(self, limit):
-        self.records = []
+    def __init__(self, limit: Union[float, int]):
+        self.records: List[Record] = []
         self.limit = limit
+
+    def add_record(self, record: Record) -> None:
+        self.records.append(record)
+
+    def get_today_stats(self) -> Union[float, int]:
+        return sum(
+            record.amount for record in self.records 
+            if record.date == dt.date.today()
+        )
+
+    def get_week_stats(self) -> Union[float, int]:
+        today = dt.date.today()
+        week_start = today - dt.timedelta(days=7)
+        return sum(
+            record.amount for record in self.records
+            if week_start <= record.date <= today
+        )
+
+    def get_limit_today(self) -> Union[float, int]:
+        return self.limit - self.get_today_stats()
 
 
 class CaloriesCalculator(Calculator):
@@ -21,71 +48,31 @@ class CashCalculator(Calculator):
     ...
 
 
-class InfoMessage:
-    """Информационное сообщение о тренировке."""
-    pass
-
-
-class Training:
-    """Базовый класс тренировки."""
-
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 ) -> None:
-        pass
-
-    def get_distance(self) -> float:
-        """Получить дистанцию в км."""
-        pass
-
-    def get_mean_speed(self) -> float:
-        """Получить среднюю скорость движения."""
-        pass
-
-    def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий."""
-        pass
-
-    def show_training_info(self) -> InfoMessage:
-        """Вернуть информационное сообщение о выполненной тренировке."""
-        pass
-
-
-class Running(Training):
-    """Тренировка: бег."""
-    pass
-
-
-class SportsWalking(Training):
-    """Тренировка: спортивная ходьба."""
-    pass
-
-
-class Swimming(Training):
-    """Тренировка: плавание."""
-    pass
-
-
-def read_package(workout_type: str, data: list) -> Training:
-    """Прочитать данные полученные от датчиков."""
-    pass
-
-
-def main(training: Training) -> None:
+def main() -> None:
     """Главная функция."""
-    pass
+    # для CashCalculator 
+    r1 = Record(amount=145, comment='Безудержный шопинг')
+    r2 = Record(amount=1568, comment='Наполнение потребительской корзины')
+    r3 = Record(amount=691, comment='Катание на такси', date='08.03.2019')
 
+    # для CaloriesCalculator
+    r4 = Record(amount=1186, comment='Кусок тортика. И ещё один.', date='24.02.2019')
+    r5 = Record(amount=84, comment='Йогурт.', date='23.02.2019')
+    r6 = Record(amount=1140, comment='Баночка чипсов.', date='24.02.2019')
+    
+    cash_calculator = CashCalculator(3000)
+    calories_calculator = CaloriesCalculator(3000)
+
+    cash_calculator.add_record(r1)
+    cash_calculator.add_record(r2)
+    cash_calculator.add_record(r3)
+
+    calories_calculator.add_record(r4)
+    calories_calculator.add_record(r5)
+    calories_calculator.add_record(r6)
+
+    print(cash_calculator.get_limit_today())
+    print(calories_calculator.get_limit_today())
 
 if __name__ == '__main__':
-    packages = [
-        ('SWM', [720, 1, 80, 25, 40]),
-        ('RUN', [15000, 1, 75]),
-        ('WLK', [9000, 1, 75, 180]),
-    ]
-
-    for workout_type, data in packages:
-        training = read_package(workout_type, data)
-        main(training)
-
+    main()
