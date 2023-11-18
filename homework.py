@@ -104,9 +104,9 @@ def main() -> None:
     calories_calculator.add_record(r5)
     calories_calculator.add_record(r6)
 
-    #   print(cash_calculator.get_limit_today())
-    #   print(cash_calculator.get_today_cash_remained('eur'))
-    print(calories_calculator.get_limit_today())
+    # print(cash_calculator.get_limit_today())
+    print(cash_calculator.get_today_cash_remained('eur'))
+    # print(calories_calculator.get_limit_today())
     print(calories_calculator.get_calories_remained())
 
 
