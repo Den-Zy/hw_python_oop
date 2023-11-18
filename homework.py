@@ -55,6 +55,7 @@ class CashCalculator(Calculator):
     RUB_RATE: float = 1.0
 
     def get_today_cash_remained(self) -> str:
+        """ good """
         ...
 
 
