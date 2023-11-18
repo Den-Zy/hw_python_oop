@@ -16,7 +16,7 @@ class Record:
 
 class Calculator:
     def __init__(self, limit: Union[float, int]):
-        self.records: List[Record] = []
+        self.records: list[Record] = []
         self.limit = limit
 
     def add_record(self, record: Record) -> None:
@@ -24,7 +24,7 @@ class Calculator:
 
     def get_today_stats(self) -> Union[float, int]:
         return sum(
-            record.amount for record in self.records 
+            record.amount for record in self.records
             if record.date == dt.date.today()
         )
 
@@ -41,25 +41,37 @@ class Calculator:
 
 
 class CaloriesCalculator(Calculator):
-    ...
+    def get_calories_remained(self) -> str:
+        return (
+            f'Please eat yet = {limit_today}'
+            if (limit_today := self.get_limit_today()) > 0
+            else 'Do not eat!)'
+        )
 
 
 class CashCalculator(Calculator):
-    ...
+    USD_RATE: float = 93.0
+    EUR_RATE: float = 102.1
+    RUB_RATE: float = 1.0
+
+    def get_today_cash_remained(self) -> str:
+        ...
 
 
 def main() -> None:
     """Главная функция."""
-    # для CashCalculator 
+    # для CashCalculator
     r1 = Record(amount=145, comment='Безудержный шопинг')
     r2 = Record(amount=1568, comment='Наполнение потребительской корзины')
     r3 = Record(amount=691, comment='Катание на такси', date='08.03.2019')
 
     # для CaloriesCalculator
-    r4 = Record(amount=1186, comment='Кусок тортика. И ещё один.', date='24.02.2019')
-    r5 = Record(amount=84, comment='Йогурт.', date='23.02.2019')
+    r4 = Record(amount=1186, comment='Кусок тортика. И ещё один.',
+                date='24.02.2019')
+    r5 = Record(amount=84, comment='Йогурт.')
     r6 = Record(amount=1140, comment='Баночка чипсов.', date='24.02.2019')
-    
+
+    # create classes
     cash_calculator = CashCalculator(3000)
     calories_calculator = CaloriesCalculator(3000)
 
@@ -72,7 +84,10 @@ def main() -> None:
     calories_calculator.add_record(r6)
 
     print(cash_calculator.get_limit_today())
+    print()
     print(calories_calculator.get_limit_today())
+    print(calories_calculator.get_calories_remained())
+
 
 if __name__ == '__main__':
     main()
