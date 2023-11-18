@@ -53,10 +53,30 @@ class CashCalculator(Calculator):
     USD_RATE: float = 93.0
     EUR_RATE: float = 102.1
     RUB_RATE: float = 1.0
+    CALC_ACCURACY: int = 2
 
-    def get_today_cash_remained(self) -> str:
-        """ good """
-        ...
+    def get_today_cash_remained(self, currency: str) -> str:
+        money: dict[str, tuple[float, str]] = {
+            'usd': (self.USD_RATE, '$'),
+            'eur': (self.EUR_RATE, '€'),
+            'rub': (self.RUB_RATE, '₽')
+        }
+
+        if currency not in money:
+            return 'Currency is not in [usd, eur, rub]'
+
+        limit_today = self.get_limit_today()
+
+        if limit_today == 0:
+            return 'No money!)'
+
+        rate, currency_icon = money[currency]
+
+        cash_today = round(limit_today / rate, self.CALC_ACCURACY)
+
+        if limit_today > 0:
+            return f'for coast is {cash_today}{currency_icon}'
+        return f'your dolg is {cash_today}{currency_icon}'
 
 
 def main() -> None:
@@ -84,8 +104,8 @@ def main() -> None:
     calories_calculator.add_record(r5)
     calories_calculator.add_record(r6)
 
-    print(cash_calculator.get_limit_today())
-    print()
+    #   print(cash_calculator.get_limit_today())
+    #   print(cash_calculator.get_today_cash_remained('eur'))
     print(calories_calculator.get_limit_today())
     print(calories_calculator.get_calories_remained())
 
